@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UCF Procurement Request</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500&display=swap');
+
+  :root {
+    --gold: #FFC904;
+    --black: #000000;
+    --white: #ffffff;
+    --gray-light: #f5f5f5;
+    --gray-mid: #e0e0e0;
+    --gray-text: #555555;
+    --success: #2e7d32;
+    --error: #c62828;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--gray-light);
+    color: var(--black);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--black);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  header .logo-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  header .ucf-badge {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    padding: 6px 14px;
+    letter-spacing: 1px;
+  }
+
+  header .title-text {
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+
+  header .title-text span {
+    color: var(--gold);
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 36px auto;
+    padding: 0 20px 60px;
+  }
+
+  .form-card {
+    background: var(--white);
+    border-top: 5px solid var(--gold);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    padding: 40px 44px;
+  }
+
+  .form-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+
+  .form-subtitle {
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--gray-mid);
+  }
+
+  .section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--black);
+    background: var(--gold);
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 18px;
+    margin-top: 28px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-text);
+  }
+
+  label .req {
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    border: 1.5px solid var(--gray-mid);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--black);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Line Items Table */
+  .line-items-wrapper { margin-bottom: 10px; }
+
+  .line-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .line-items-table thead tr {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .line-items-table thead th {
+    padding: 10px 10px;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .line-items-table thead th:last-child { text-align: center; width: 50px; }
+
+  .line-items-table tbody tr { border-bottom: 1px solid var(--gray-mid); }
+  .line-items-table tbody tr:nth-child(even) { background: var(--gray-light); }
+
+  .line-items-table tbody td { padding: 6px 6px; }
+
+  .line-items-table input[type="text"],
+  .line-items-table input[type="number"] {
+    border: 1px solid var(--gray-mid);
+    padding: 7px 8px;
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .line-total {
+    font-weight: 600;
+    color: var(--black);
+    text-align: right;
+    padding-right: 10px;
+    min-width: 90px;
+  }
+
+  .btn-remove {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 18px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: color 0.2s;
+  }
+  .btn-remove:hover { color: var(--error); }
+
+  .btn-add-row {
+    margin-top: 10px;
+    background: none;
+    border: 1.5px dashed var(--gold);
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 18px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .btn-add-row:hover { background: var(--gold); }
+
+  /* Totals */
+  .totals-section {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .totals-box {
+    background: var(--black);
+    color: var(--white);
+    padding: 16px 24px;
+    min-width: 240px;
+  }
+
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+
+  .totals-row.grand {
+    border-top: 1px solid var(--gold);
+    margin-top: 8px;
+    padding-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold);
+  }
+
+  /* Submit */
+  .submit-section {
+    margin-top: 36px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .btn-reset {
+    background: none;
+    border: 1.5px solid var(--gray-mid);
+    padding: 12px 24px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    color: var(--gray-text);
+    transition: all 0.2s;
+  }
+  .btn-reset:hover { border-color: var(--black); color: var(--black); }
+
+  .btn-submit {
+    background: var(--gold);
+    border: none;
+    padding: 13px 36px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    color: var(--black);
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .btn-submit:hover { background: var(--black); color: var(--gold); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Status messages */
+  .status-msg {
+    display: none;
+    padding: 14px 18px;
+    margin-top: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-left: 4px solid;
+  }
+  .status-msg.success { background: #e8f5e9; border-color: var(--success); color: var(--success); display: block; }
+  .status-msg.error { background: #ffebee; border-color: var(--error); color: var(--error); display: block; }
+
+  .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 3px solid var(--gray-mid);
+    border-top-color: var(--black);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .submitting .spinner { display: inline-block; }
+
+  @media (max-width: 600px) {
+    .form-card { padding: 24px 16px; }
+    .form-row, .form-row.three { grid-template-columns: 1fr; }
+    header { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-bar">
+    <div class="ucf-badge">UCF</div>
+    <div class="title-text">
+      <span>Finance & Business Center</span>
+      Procurement Request Portal
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="form-card">
+    <div class="form-title">Procurement Request Form</div>
+    <div class="form-subtitle">Complete all required fields marked with ✦. Your request will be reviewed by the Budget Specialist and routed to the appropriate TPC member.</div>
+
+    <form id="procurementForm" novalidate>
+
+      <!-- Section 1: Requester Information -->
+      <div class="section-title">Requester Information</div>
+
+      <div class="form-row">
+        <div class="field-group">
+          <label>Full Name <span class="req">✦</span></label>
+          <input type="text" id="fullName" placeholder="First Last" required>
+        </div>
+        <div class="field-group">
+          <label>UCF Email <span class="req">✦</span></label>
+          <input type="email" id="email" placeholder="name@ucf.edu" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field-group">
+          <label>Department <span class="req">✦</span></label>
+          <select id="department" required>
+            <option value="">— Select Department —</option>
+            <option>College of Arts and Humanities</option>
+            <option>College of Business Administration</option>
+            <option>College of Education</option>
+            <option>College of Engineering and Computer Science</option>
+            <option>College of Health Professions and Sciences</option>
+            <option>College of Medicine</option>
+            <option>College of Nursing</option>
+            <option>College of Sciences</option>
+            <option>College of Social Sciences and Public Administration</option>
+            <option>Rosen College of Hospitality Management</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Date Needed <span class="req">✦</span></label>
+          <input type="date" id="dateNeeded" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field-group">
+          <label>Phone / Extension</label>
+          <input type="text" id="phone" placeholder="(407) 555-0000">
+        </div>
+        <div class="field-group">
+          <label>Budget / Account Code</label>
+          <input type="text" id="budgetCode" placeholder="e.g. 12345-6789">
+        </div>
+      </div>
+
+      <!-- Section 2: Line Items -->
+      <div class="section-title">Line Items</div>
+
+      <div class="line-items-wrapper">
+        <table class="line-items-table">
+          <thead>
+            <tr>
+              <th style="width:40%">Item Description</th>
+              <th style="width:15%">Qty</th>
+              <th style="width:20%">Unit Cost ($)</th>
+              <th style="width:20%">Line Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="lineItemsBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+      <button type="button" class="btn-add-row" onclick="addRow()">+ Add Line Item</button>
+
+      <div class="totals-section">
+        <div class="totals-box">
+          <div class="totals-row grand">
+            <span>TOTAL</span>
+            <span id="grandTotal">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Justification -->
+      <div class="section-title">Justification</div>
+
+      <div class="form-row full">
+        <div class="field-group">
+          <label>Purpose / Reason for Purchase <span class="req">✦</span></label>
+          <textarea id="justification" placeholder="Describe the purpose of this procurement request..." required></textarea>
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="field-group">
+          <label>Additional Notes</label>
+          <textarea id="notes" placeholder="Any additional information, vendor preferences, links, etc."></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <button type="button" class="btn-reset" onclick="resetForm()">Clear Form</button>
+        <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">
+          <span class="spinner" id="spinner"></span>
+          Submit Request
+        </button>
+      </div>
+
+      <div id="statusMsg" class="status-msg"></div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  // ─── CONFIG ────────────────────────────────────────────────────
+  const POWER_AUTOMATE_URL = "https://defaultbb932f15ef3842ba91fcf3c59d5dd1.f1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/efecd3054d734baab995df59bc517ab3/triggers/manual/paths/invoke?api-version=1";
+  // ───────────────────────────────────────────────────────────────
+
+  let rowCount = 0;
+
+  function addRow() {
+    rowCount++;
+    const tbody = document.getElementById("lineItemsBody");
+    const tr = document.createElement("tr");
+    tr.id = `row-${rowCount}`;
+    tr.innerHTML = `
+      <td><input type="text" placeholder="Item description" id="desc-${rowCount}"></td>
+      <td><input type="number" min="0" step="1" placeholder="0" id="qty-${rowCount}" oninput="calcRow(${rowCount})"></td>
+      <td><input type="number" min="0" step="0.01" placeholder="0.00" id="cost-${rowCount}" oninput="calcRow(${rowCount})"></td>
+      <td class="line-total" id="lt-${rowCount}">$0.00</td>
+      <td><button type="button" class="btn-remove" onclick="removeRow(${rowCount})" title="Remove">×</button></td>
+    `;
+    tbody.appendChild(tr);
+    calcTotals();
+  }
+
+  function removeRow(id) {
+    const row = document.getElementById(`row-${id}`);
+    if (row) row.remove();
+    calcTotals();
+  }
+
+  function calcRow(id) {
+    const qty  = parseFloat(document.getElementById(`qty-${id}`)?.value)  || 0;
+    const cost = parseFloat(document.getElementById(`cost-${id}`)?.value) || 0;
+    const lt   = qty * cost;
+    const ltEl = document.getElementById(`lt-${id}`);
+    if (ltEl) ltEl.textContent = formatCurrency(lt);
+    calcTotals();
+  }
+
+  function calcTotals() {
+    const rows = document.querySelectorAll("#lineItemsBody tr");
+    let grand = 0;
+    rows.forEach(tr => {
+      const id = tr.id.replace("row-", "");
+      const qty  = parseFloat(document.getElementById(`qty-${id}`)?.value)  || 0;
+      const cost = parseFloat(document.getElementById(`cost-${id}`)?.value) || 0;
+      grand += qty * cost;
+    });
+    document.getElementById("grandTotal").textContent = formatCurrency(grand);
+  }
+
+  function formatCurrency(val) {
+    return "$" + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function getLineItemsText() {
+    const rows = document.querySelectorAll("#lineItemsBody tr");
+    if (!rows.length) return "No line items provided.";
+    let text = "|| Item Description || Qty || Unit Cost || Line Total ||\n";
+    rows.forEach(tr => {
+      const id   = tr.id.replace("row-", "");
+      const desc = document.getElementById(`desc-${id}`)?.value || "-";
+      const qty  = document.getElementById(`qty-${id}`)?.value  || "0";
+      const cost = document.getElementById(`cost-${id}`)?.value || "0.00";
+      const lt   = (parseFloat(qty) * parseFloat(cost)).toFixed(2);
+      text += `| ${desc} | ${qty} | $${parseFloat(cost).toFixed(2)} | $${lt} |\n`;
+    });
+    return text;
+  }
+
+  function validate() {
+    const required = [
+      { id: "fullName",      label: "Full Name" },
+      { id: "email",         label: "UCF Email" },
+      { id: "department",    label: "Department" },
+      { id: "dateNeeded",    label: "Date Needed" },
+      { id: "justification", label: "Justification" },
+    ];
+    for (const f of required) {
+      const el = document.getElementById(f.id);
+      if (!el.value.trim()) {
+        showStatus(`Please fill in: ${f.label}`, "error");
+        el.focus();
+        return false;
+      }
+    }
+    const rows = document.querySelectorAll("#lineItemsBody tr");
+    if (!rows.length) {
+      showStatus("Please add at least one line item.", "error");
+      return false;
+    }
+    return true;
+  }
+
+  async function submitForm() {
+    if (!validate()) return;
+
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.classList.add("submitting");
+    showStatus("", "");
+
+    const fullName    = document.getElementById("fullName").value.trim();
+    const email       = document.getElementById("email").value.trim();
+    const department  = document.getElementById("department").value;
+    const dateNeeded  = document.getElementById("dateNeeded").value;
+    const phone       = document.getElementById("phone").value.trim();
+    const budgetCode  = document.getElementById("budgetCode").value.trim();
+    const justification = document.getElementById("justification").value.trim();
+    const notes       = document.getElementById("notes").value.trim();
+    const grandTotal  = document.getElementById("grandTotal").textContent;
+    const lineItems   = getLineItemsText();
+
+    const payload = {
+      fullName,
+      email,
+      department,
+      dateNeeded,
+      phone:        phone || "N/A",
+      budgetCode:   budgetCode || "N/A",
+      justification,
+      notes:        notes || "None",
+      grandTotal:   document.getElementById("grandTotal").textContent,
+      lineItems:    getLineItemsText(),
+      submittedAt:  new Date().toLocaleString()
+    };
+
+    try {
+      const response = await fetch(POWER_AUTOMATE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok || response.status === 202) {
+        showStatus("✅ Request submitted successfully! Your team will review it shortly.", "success");
+        document.getElementById("procurementForm").reset();
+        document.getElementById("lineItemsBody").innerHTML = "";
+        rowCount = 0;
+        calcTotals();
+        addRow();
+      } else {
+        console.error("Response status:", response.status);
+        showStatus("❌ Submission failed. Please contact the Finance & Business Center.", "error");
+      }
+    } catch (e) {
+      console.error(e);
+      showStatus("❌ Network error. Please check your connection and try again.", "error");
+    }
+
+    btn.disabled = false;
+    btn.classList.remove("submitting");
+  }
+
+  function showStatus(msg, type) {
+    const el = document.getElementById("statusMsg");
+    el.className = "status-msg " + type;
+    el.textContent = msg;
+    if (msg) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function resetForm() {
+    if (confirm("Clear all form data?")) {
+      document.getElementById("procurementForm").reset();
+      document.getElementById("lineItemsBody").innerHTML = "";
+      rowCount = 0;
+      calcTotals();
+      addRow();
+      showStatus("", "");
+    }
+  }
+
+  // Init with one row
+  addRow();
+</script>
+</body>
+</html>
